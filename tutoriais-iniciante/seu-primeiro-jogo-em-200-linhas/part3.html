@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Seu primeiro jogo em 200 linhas - Parte 3</title>
+
+        <link rel="stylesheet" href="/style.css">
+        <link rel="stylesheet" href="/header.css">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/plugins/line-highlight/prism-line-highlight.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/plugins/line-numbers/prism-line-numbers.min.css"/>
+    </head>
+
+    <body>
+        <div id="header"></div>
+
+        <article>
+            <h1>Seu primeiro jogo em 200 linhas - Parte 3</h1>
+
+            <p>Essa é a terceira parte do tutorial, você pode acessar as outras partes aqui: <a href=".">parte 1</a>, <a href="part2.html">parte 2</a> e <a href="part3.html">parte 3</a>.</p>
+
+            <p>Na segunda parte nós fizemos os controles do jogador e também fizemos ele atirar, agora vamos finalizar criando inimigos e configurando colisões.</p>
+
+            <h2>Passo 6: Criando objetos dos inimigos</h2>
+
+            <p>A imagem que eu vou usar para os inimigos está disponível <a href="https://opengameart.org/content/skull-in-a-ufo-spacecraft" target="_blank">nesse link</a>, porém a imagem original é muito grande então eu precisei fazer alguns ajustes, você pode baixar a versão ajustada dela <a href="inimigo.png" download> aqui</a>. Coloque essa imagem na pasta "imagens" e renomeie para "inimigo.png"</p>
+            
+            <p>A criação de inimigos vai funcionar da seguinte forma: a cada X segundos um inimigo vai ser criado no topo da tela e irá andar para baixo. Para isso nós vamos fazer quase o mesmo código das balas, porém vamos usar apenas um temporizador para criar os inimigos:</p>
+
+            <pre><code class="language-lua">
+                inimigoImg = nil
+                listaDeInimigos = {}
+
+                -- Temporizador
+                criarInimigosTempo = 0
+                criarInimigosTempoMaximo = 0.5
+
+                function love.load()
+                    jogador.imagem = love.graphics.newImage("imagens/jogador.png")
+                    balaImg = love.graphics.newImage("imagens/bala.png")
+                    inimigoImg = love.graphics.newImage("imagens/inimigo.png")
+                end
+            </code></pre>
+
+            <p>Agora vamos fazer o temporizador que irá criar os inimigos. Diferente do que fizemos com as balas, esse temporizador irá reiniciar a contagem automaticamente sempre que o tempo acabar. No love.update, coloque:</p>
+            
+            <pre><code class="language-lua">
+                criarInimigosTempo = criarInimigosTempo - 1 * dt
+                if criarInimigosTempo &lt;= 0 then
+                    local novoInimigo = {
+                        x = math.random(0, love.graphics.getWidth() - inimigoImg:getWidth()),
+                        y = 0,
+                        velocidade = 120,
+                        imagem = inimigoImg,
+                    }
+                    table.insert(listaDeInimigos, novoInimigo)
+
+                    criarInimigosTempo = criarInimigosTempoMaximo
+                end
+            </code></pre>
+
+            <p>Sempre que o temporizador se esgotar, criamos um novo objeto que representará um inimigo e então o colocamos na <i>table</i> <b>listaDeInimigos</b>. Após isso, reiniciamos o temporizador.</p>
+
+            <p>A posição <b>y</b> inicial do inimigo será 0, ou seja, o topo da tela. Já na posição <b>x</b> nós usamos a função <span class="code">math.random</span> para obter um número aleatório entre 0 e o valor da largura da tela - largura do inimigo (fazemos essa subtração para que o inimigo não apareça fora da tela). Isso fará com que a posição horizontal de cada inimigo criado seja diferente.</p>
+
+            <p>Agora vamos fazer os inimigos se moverem:</p>
+            <pre><code class="language-lua">
+                for i, inimigo in ipairs(listaDeInimigos) do
+                    inimigo.y = inimigo.y + inimigo.velocidade * dt
+
+                    if inimigo.y &gt; love.graphics.getHeight() then
+                        table.remove(listaDeInimigos, i)
+                    end
+                end
+            </code></pre>
+
+            <p>Aqui nós fizemos praticamente a mesma coisa que as balas, porém eles se moverão para baixo e serão removidos quando saírem da tela pela parte de baixo. Usamos a função <span class="code">love.graphics.getHeight</span> para obter a altura da tela, podemos assumir que o inimigo está fora da tela se a posição <b>y</b> dele for maior que esse valor.</p>
+
+            <p>Agora só precisamos desenhá-los no <span class="code">love.draw</span>:</p>
+
+            <pre><code class="language-lua">
+                for i, inimigo in ipairs(listaDeInimigos) do
+                    love.graphics.draw(inimigo.imagem, inimigo.x, inimigo.y)
+                end
+            </code></pre>
+
+            <img src="criando_inimigos.gif" alt="Criando inimigos">
+
+            <p>Fizemos com sucesso um sistema que cria inimigos automaticamente sempre em lugares diferentes, mas você pode ver que eles simplesmente ignoram o jogador e as balas. Nosso próximo trabalho então é encontrar uma forma de detectar se os inimigos estão encostando no jogador ou nas balas e fazê-los reagir de alguma forma em cada um desses casos.</p>
+            
+            <h2>Passo 7: Detectando colisões</h2>
+
+            <p>Existem várias bibliotecas de colisões em Lua que poderíamos usar, inclusive o próprio LÖVE tem um módulo de física (love.physics), porém todas essas opções são desnecessariamente complexas para o nosso jogo. O que nós vamos usar então é um pequeno sistema chamado <i>Axis Aligned Bounding Box</i> (AABB), que basicamente detecta se 2 retângulos estão colidindo:</p>
+
+            <pre><code class="language-lua">
+                function AABB(x1,y1,w1,h1, x2,y2,w2,h2)
+                    return x1 &lt; x2+w2 and
+                           x2 &lt; x1+w1 and
+                           y1 &lt; y2+h2 and
+                           y2 &lt; y1+h1
+                end
+
+            </code></pre>
+
+            <p>Os argumentos <b>x1</b>, <b>y1</b>, <b>w1</b> e <b>h1</b> são as posições x, y e a largura e altura do primeiro retângulo, já <b>x2</b>, <b>y2</b>, <b>w2</b> e <b>h2</b> são os mesmos valores do segundos do retângulo. Essa função retornará <b>true</b> se esses 2 retângulos estiverem colidindo, ou <b>false</b> se não estiverem. Coloque essa função no fim ou no topo do seu &quot;main.lua&quot; para podermos usá-la.</p>
+
+            <p>Primeiro vamos detectar a colisão entre as balas e os inimigos. No <span class="code">love.update</span>, dentro do <i>for loop</i> onde atualizamos as balas, coloque:</p>
+
+            <pre><code class="language-lua">
+                for i, bala in ipairs(listaDeBalas) do
+                    -- Código anterior
+
+                    for j, inimigo in ipairs(listaDeInimigos) do
+                        if AABB(inimigo.x, inimigo.y, inimigo.imagem:getWidth(), inimigo.imagem:getHeight(), bala.x, bala.y, bala.imagem:getWidth(), bala.imagem:getHeight()) then
+                            table.remove(listaDeBalas, i)
+                            table.remove(listaDeInimigos j)
+                        end
+                    end
+                end
+            </code></pre>
+
+            <p>Para cada bala presente no jogo, nós iremos executar um outro <i>for loop</i> passando por cada um dos inimigos presente no jogo e checamos se esse inimigo está colidindo com a bala atual. Se estiver colidindo, removeremos a bala e o inimigo em questão.</p>
+
+            <img src="destruindo_inimigos.gif" alt="Destruindo inimigos">
+
+            <p>Agora vamos detectar a colisão entre os inimigos e o jogador. Iremos fazer com que o jogador morra caso essa colisão aconteça, então primeiro nós teremos que criar uma variável no objeto do jogador que indicará que ele está vivo ou não:</p>
+
+            <pre><code class="language-lua">
+                jogador = {
+                    x = 100,
+                    y = 550,
+                    velocidade = 500,
+                    imagem = nil,
+
+                    recargaTiro = 0,
+                    recargaMaxima = 0.25,
+                    podeAtirar = true,
+
+                    estaVivo = true,
+                }
+            </code></pre>
+
+            <p>Agora no seu <span class="code">love.update</span>, dentro do <i>for loop</i> onde atualizamos os inimigos, coloque:</p>
+
+            <pre><code class="language-lua">
+                for i, inimigo in ipairs(listaDeInimigos) do
+                    -- Código anterior
+
+                    if jogador.estaVivo and AABB(inimigo.x, inimigo.y, inimigo.imagem:getWidth(), inimigo.imagem:getHeight(), jogador.x, jogador.y, jogador.imagem:getWidth(), jogador.imagem:getHeight()) then
+                        table.remove(listaDeInimigos, i)
+                        jogador.estaVivo = false
+                    end
+                end
+            </code></pre>
+
+            <p>Passamos por cada um dos inimigos e verificamos se ele está colidindo com o jogador. Se estiver, removemos o inimigo e definimos a variável <b>estaVivo</b> do jogador para <b>false</b>.</p>
+
+            <p>Se o jogador não estiver vivo, não queremos que ele fique visível e nem que ele consiga atirar, certo? Para isso, vamos precisar de uma pequena modificação no <span class="code">love.draw</span> para desenhar o jogador apenas se <b>estaVivo</b> for <b>true</b>:</p>
+
+            <pre><code class="language-lua">
+                if jogador.estaVivo then
+                    love.graphics.draw(jogador.imagem, jogador.x, jogador.y)
+                end
+            </code></pre>
+
+            <p>Também vamos adicionar mais uma condição para o botão de atirar:</p>
+
+            <pre><code class="language-lua">
+                if love.keyboard.isDown("z") and jogador.podeAtirar and jogador.estaVivo then
+                    local novaBala = {
+                        x = jogador.x + jogador.imagem:getWidth()/2,
+                        y = jogador.y,
+                        velocidade = 600,
+                        imagem = balaImg,
+                    }
+                    table.insert(listaDeBalas, novaBala)
+                
+                    jogador.recargaTiro = jogador.recargaMaxima
+                end
+            </code></pre>
+
+            <p>No Android é o mesmo processo:</p>
+            <pre><code class="language-lua">
+                -- Código anterior
+
+                elseif jogador.podeAtirar and jogador.estaVivo then
+                    local novaBala = {
+                        x = jogador.x + jogador.imagem:getWidth()/2,
+                        y = jogador.y,
+                        velocidade = 600,
+                        imagem = balaImg,
+                    }
+                    table.insert(listaDeBalas, novaBala)
+                
+                    jogador.recargaTiro = jogador.recargaMaxima
+                end
+
+            </code></pre>
+
+            <img src="morrendo.gif" alt="Morrendo">
+
+            <h2>Passo 8: Reiniciando o jogo</h2>
+
+            <p>Nosso jogador agora pode morrer para os inimigos, mas depois disso não podemos fazer nada a não ser fechar o jogo, o que não é muito intuitivo. O que vamos fazer então é uma forma de reiniciar o estado do jogo depois que o jogador morrer.</p>
+            
+            <p>No seu <span class="code">love.update</span>, coloque:</p>
+
+            <pre><code class="language-lua">
+                -- Vamos reiniciar com a tecla "r"
+                if love.keyboard.isDown("r") and not jogador.estaVivo then
+                    listaDeBalas = {}         -- Removendo todas as balas
+                    listaDeInimigos = {}      -- Removendo todos os inimigos
+
+                    jogador.estaVivo = true   -- Revivendo o jogador
+                    jogador.x = 100           -- Redefinindo a posição X
+                    jogador.y = 550           -- Redefinindo a posição Y
+                    jogador.recargaTiro = 0   -- Reiniciando o temporizador dos tiros
+
+                    criarInimigosTempo = 0    -- Redefinindo o temporizador dos inimigos
+                end
+
+                -- No Android só precisamos pressionar em qualquer lugar da tela
+                if love.mouse.isDown(1) and not jogador.estaVivo then
+                    listaDeBalas = {}
+                    listaDeInimigos = {}
+
+                    jogador.estaVivo = true
+                    jogador.x = 100
+                    jogador.y = 550
+                    jogador.recargaTiro = 0
+
+                    criarInimigosTempo = 0
+                end
+            </code></pre>
+
+            <p>Também vamos fazer uma pequena mensagem avisando sobre a existência desse botão quando o jogador morrer. No seu <span class="code">love.draw</span>, na condição onde desenhamos o jogador, coloque:</p>
+
+            <pre><code class="language-lua">
+                if jogador.estaVivo then
+                    love.graphics.draw(jogador.imagem, jogador.x, jogador.y)
+                else
+                    love.graphics.print("Pressione R para reiniciar", 150, 320)
+                end
+
+            </code></pre>
+
+            <img src="reiniciando_jogo.gif" alt="Reiniciando o jogo">
+
+            <p>Parabéns, você acabou de fazer o seu primeiro jogo no LÖVE em menos de 200 linhas! Com isso você já tem o conhecimento básico sobre como fazer seus próprios jogos nessa ferramenta incrível.</p>
+
+            <p>Na próxima parte desse tutorial você encontrará alguns exercícios para te ajudar a fixar o que você aprendeu até aqui. Será que você consegue completar todos eles?</p>
+
+            <a class="goto-part left" href="part2.html">Ir para a parte 2</a>
+            <a class="goto-part right" href="exercicios.html">Ir para os exercícios</a>
+
+            <div id="comment-section"></div>
+        </article>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/components/prism-core.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/plugins/autoloader/prism-autoloader.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/plugins/normalize-whitespace/prism-normalize-whitespace.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/plugins/line-highlight/prism-line-highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script> -->
+        <script src="/node_modules/jquery/dist/jquery.js"></script>
+        <script src="/script.js"></script>
+    </body>
+
+    <footer>
+        <div id="pagefooter"></div>
+    </footer>
+</html>

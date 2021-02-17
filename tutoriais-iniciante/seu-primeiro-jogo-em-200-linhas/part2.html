@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Seu primeiro jogo em 200 linhas - Parte 2</title>
+
+        <link rel="stylesheet" href="/style.css">
+        <link rel="stylesheet" href="/header.css">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/plugins/line-highlight/prism-line-highlight.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/plugins/line-numbers/prism-line-numbers.min.css"/>
+    </head>
+
+    <body>
+        <div id="header"></div>
+
+        <article class="line-numbers">
+            <h1>Seu primeiro jogo em 200 linhas - Parte 2</h1>
+
+            <p>Essa é a segunda parte do tutorial, você pode acessar as outras partes aqui: <a href=".">parte 1</a>, <a href="part2.html">parte 2</a> e <a href="part3.html">parte 3</a>.</p>
+
+            <p>Na primeira parte nós preparamos a base do projeto e desenhamos uma imagem na tela, agora nós vamos transformar essa imagem estática em algo que possamos movimentar.</p>
+
+            <!-- ANCHOR Criando o objeto do jogador -->
+            <h2>Passo 3: Criando o objeto do jogador</h2>
+
+            <p>No seu &quot;main.lua&quot;, coloque:</p>
+
+            <pre><code class="language-lua">
+                jogador = {
+                    x = 100,
+                    y = 550,
+                    velocidade = 500,
+                    imagem = nil,
+                }
+            </code></pre>
+
+            <p>
+                Aqui nós criamos uma <i>table</i> para armazenar as variáveis do jogador. Temos as variáveis <b>x</b> e <b>y</b> para guardar a posição, <b>velocidade</b> 
+                que vamos usar na movimentação, e <b>imagem</b> que é onde nós vamos colocar a imagem do jogador.</p>
+
+            <p>Agora vamos precisar substituir o código. Iremos carregar a imagem na variável <b>imagem</b> do jogador ao invés da variável <b>jogadorImg</b>. Além disso, faremos essa imagem ser desenhada na posição do jogador:</p>
+            
+            <pre data-line="1, 4, 8"><code class="language-lua">
+                -- jogadorImg = nil       Não vamos usar mais essa variável, então pode apagá-la
+
+                function love.load()
+                    jogador.imagem = love.graphics.newImage("imagens/jogador.png")
+                end
+                
+                function love.draw()
+                    love.graphics.draw(jogador.imagem, jogador.x, jogador.y)
+                end
+            </code></pre>
+
+            <!-- ANCHOR Movimentação do jogador -->
+            <h2>Passo 4: Movimentação do jogador</h2>
+
+            <p>Agora nós iremos começar a usar mais o <span class="code">love.update</span>. Coloque isso dentro dele:</p>
+
+            <pre><code class="language-lua">
+                function love.update(dt)
+                    if love.keyboard.isDown(&quot;left&quot;) then
+                        jogador.x = jogador.x - jogador.velocidade * dt
+                    
+                    elseif love.keyboard.isDown(&quot;right&quot;) then
+                        jogador.x = jogador.x + jogador.velocidade * dt
+                    end
+                end
+            </code></pre>
+
+            <p>
+                Em cada frame nós verificamos se a tecla &quot;left&quot; (direcional esquerdo) está pressionada. Caso esteja, nós pegamos o valor da variável <b>velocidade</b> do jogador, multiplicamos por <b>dt</b> e então <u>subtraímos</u> esse valor da posição X do jogador.
+                Depois fazemos a mesma coisa com a tecla &quot;right&quot; (direcional direito), porém nós <u>adicionamos</u> o valor à posição X do jogador.
+            </p>
+
+            <p>Caso esteja no Android, será necessário um pequeno truque para fazer os controles no touch. O que nós vamos fazer é dividir a tela horizontalmente em 3 partes: esquerda, centro e direita. Depois nós verificamos se o lado esquerdo ou direito da tela está sendo pressionado e então movemos o jogador para essa direção:</p>
+            
+            <pre><code class="language-lua">
+                function love.update(dt)
+                    local area = love.graphics.getWidth()/3
+
+                    if love.mouse.isDown(1) then
+                        if love.mouse.getX() &lt; area then
+                            jogador.x = jogador.x - jogador.velocidade * dt
+
+                        elseif love.mouse.getX() &gt; love.graphics.getWidth() - area then
+                            jogador.x = jogador.x + jogador.velocidade * dt
+                        end
+                    end
+                end
+            </code></pre>
+
+            <p>
+                Aqui nós usamos a função <span class="code">love.graphics.getWidth</span> para obter a largura da tela, dividimos esse valor por 3 e então guardamos esse resultado na variável local <b>área</b>. 
+                Depois usamos a função <span class="code">love.mouse.isDown</span> para verificar se o mouse (ou o touch) está pressionado.
+                Caso esteja, nós usamos a função <span class="code">love.mouse.getX</span> para obter a posição X do touch e verificamos se é menor que <b>area</b> (ou seja, o lado esquerdo da tela) e então diminuímos a velocidade * dt da posição do jogador. Em seguida, da mesma forma, verificamos se a posição X do touch é maior que a largura da tela - <b>area</b> (ou seja, o lado direito da tela) e então adicionamos a velocidade * dt na posição do jogador.
+            </p>
+
+            <button class="collapsible">Mas por que precisamos multiplicar a velocidade por <b>dt</b>?</button>
+            <div class="collapsible-content">
+                <p>Primeiro você precisa saber que o <span class="code">love.update</span> é executado de acordo com o FPS (frames por segundo), então se o jogo estiver rodando a 20 FPS, tudo dentro do <span class="code">love.update</span> será executado 20 vezes a cada segundo, se estiver rodando a 5 FPS então tudo será executado 5 vezes a cada segundo e por aí vai.</p>
+
+                <p>Para explicar melhor, considere este código como exemplo:</p>
+
+                <pre><code class="language-lua">
+                    valor = 0
+                    function love.update(dt)
+                        valor = valor + 2
+                    end
+                </code></pre>
+
+                <p>
+                    Aqui nós adicionamos 2 à variável <b>valor</b> sempre que o <span class="code">love.update</span> for executado. Se o jogo estiver rodando a 60 FPS, a cada segundo será adicionado 2 * 60, ou seja, 120 ao todo. Porém se o mesmo código for executado em uma máquina mais fraca que só consegue rodar o código a 20 FPS, então a cada segundo será adicionado 2 * 20, ou seja, 40 ao todo.
+                    Isso faz com que o código se torne inconsistente, pois o resultado vai depender do desempenho da máquina que está executando.
+                </p>
+                <p>
+                    Para corrigir essa inconsistência nós usamos o <b>Delta Time</b> (Tempo Delta), que é o tempo passado entre o frame anterior e o atual. Normalmente o Delta é um número decimal bem pequeno, menor que 1 na maioria das vezes e que aumenta na medida que o FPS diminui. Ele é usado em operações em que um valor é alterado constantemente, como temporizadores e movimentação de personagens. 
+                    Vamos ver o código anterior, agora usando o Delta:
+                </p>
+
+                <pre><code class="language-lua">
+                    valor = 0
+                    function love.update(dt) -- O Delta é passado no argumento dt
+                        valor = valor + 2 * dt
+                    end
+                </code></pre>
+
+                <p>Adicionando 2 multiplicado pelo Delta a cada frame, nós garantimos que sempre será adicionado 2 a cada segundo, independente se o código está sendo executado a 20 FPS ou 60 FPS, pois o Delta está equilibrando essa inconsistência de FPS.</p>
+            </div>
+
+            <p>Agora podemos executar o jogo para testar os controles:</p>
+            <img src="teste_controles.gif" alt="Testando os controles">
+
+            <p>Você provavelmente notou que o jogador consegue andar para fora da visão da tela, o que deixa a gameplay um pouco estranha. Para corrigir isso nós precisamos confinar o jogador entre as bordas da tela:</p>
+
+            <pre><code class="language-lua">
+                jogador.x = math.max(jogador.x, 0)
+                jogador.x = math.min(jogador.x, love.graphics.getWidth() - jogador.imagem:getWidth())
+            </code></pre>
+
+            <p>Aqui nós usamos duas funções bem úteis que vem embutidas na linguagem: </p>
+            
+            <p>
+                <span class="code">math.max</span>: Recebe 2 números como argumento e retorna o <b>maior</b> deles. <br>
+                <span class="code">math.min</span>: Recebe 2 números como argumento e retorna o <b>menor</b> deles.
+            </p>
+
+            <p>Na primeira linha nós usamos o <span class="code">math.max</span> para definir a posição X do jogador para 0 se ela for menor que 0, isso deve impedir que o jogador saia da tela pelo lado esquerdo.</p>
+            <p>Na segunda linha nós pegamos a largura da tela e subtraímos pela largura da imagem do jogador (obtida através da função <span class="code">getWidth</span> do objeto Image), esse é o limite do lado direito considerando a largura do jogador. Depois usamos o <span class="code">math.min</span> para definir a posição X do jogador para esse valor limite se ele for maior que esse valor, isso deve impedir que o jogador saia pelo lado direito.</p>
+
+            <img src="limite_area.gif" alt="Limitando a área do jogador">
+
+            <!-- ANCHOR Fazendo o jogador atirar -->
+            <h2>Passo 5: Fazendo o jogador atirar</h2>
+
+            <p>Para fazer o jogador atirar será necessário criar um objeto diferente para cada bala, depois passar por cada uma delas e movê-las, desenhá-las e destruí-las quando for necessário. A imagem que eu vou usar para as balas é a <i>bullet_2_blue.png</i>, que está no mesmo pack de sprites que pegamos a imagem do jogador. Coloque ela na pasta &quot;imagens&quot; e renomeie para &quot;bala.png&quot;.</p>
+            <p>Nós vamos criar uma <i>table</i> para agrupar as balas que serão criadas e uma variável para carregar a imagem delas:</p>
+            <pre><code class="language-lua">
+                balaImg = nil
+                listaDeBalas = {}
+
+                function love.load()
+                    jogador.imagem = love.graphics.newImage("imagens/jogador.png")
+                    balaImg = love.graphics.newImage("imagens/bala.png")
+                end
+            </code></pre>
+            
+            <p>Também vamos criar algumas variáveis no objeto do jogador. Nós vamos usá-las para fazer um temporizador que irá limitar a frequência de tiros, afinal, seria muito injusto conseguir atirar dezenas de balas por segundo, certo?</p>
+            
+            <pre><code class="language-lua">
+                jogador = {
+                    x = 100,
+                    y = 550,
+                    velocidade = 500,
+                    imagem = nil,
+
+                    recargaTiro = 0,
+                    recargaMaxima = 0.25,
+                    podeAtirar = true,
+                }
+            </code></pre>
+            
+            <p><b>recargaTiro</b> é o temporizador que irá limitar o tempo entre cada tiro.</p>
+            <p><b>recargaMaxima</b> é o tempo máximo padrão entre cada tiro. Definimos ele para 0.25, o que significa que o jogador só vai poder atirar a cada 0.25 segundos.</p>
+            <p><b>podeAtirar</b> indica se o tempo limite já se esgotou, permitindo que o jogador possa atirar novamente.</p>
+
+            <p>Agora podemos fazer o temporizador no <span class="code">love.update</span>:</p>
+            <pre><code class="language-lua">
+                jogador.recargaTiro = jogador.recargaTiro - 1 * dt
+
+                if jogador.recargaTiro &lt;= 0 then
+                    jogador.podeAtirar = true
+                else
+                    jogador.podeAtirar = false
+                end
+            </code></pre>
+
+            <p>Aqui nós fizemos um pequeno temporizador que subtrai 1 da variável <b>recargaTiro</b> do jogador por segundo. Depois definimos a variável <b>podeAtirar</b> do jogador para true se <b>recargaTiro</b> for menor ou igual a 0, ou para false caso não seja.</p>
+            <p>Agora vamos fazer o gatilho do tiro. No teclado será o botão &quot;z&quot; que irá disparar:</p>
+
+            <pre><code class="language-lua">
+                if love.keyboard.isDown(&quot;z&quot;) and jogador.podeAtirar then
+                    local novaBala = {
+                        x = jogador.x + jogador.imagem:getWidth()/2,
+                        y = jogador.y,
+                        velocidade = 600,
+                        imagem = balaImg,
+                    }
+                    table.insert(listaDeBalas, novaBala)
+
+                    jogador.recargaTiro = jogador.recargaMaxima
+                end
+            </code></pre>
+
+            <p>Já no Android será a área do centro da tela que irá disparar. Como já temos um if e um elseif verificando se o touch está no lado esquerdo ou direito, então só precisamos adicionar um outro elseif que ele assumirá que o touch está na área do centro da tela:</p>
+            
+            <pre><code class="language-lua">
+                local area = love.graphics.getWidth()/3
+
+                if love.mouse.isDown(1) then
+                    if love.mouse.getX() &lt; area then
+                        jogador.x = jogador.x - jogador.velocidade * dt
+
+                    elseif love.mouse.getX() &gt; love.graphics.getWidth() - area then
+                        jogador.x = jogador.x + jogador.velocidade * dt
+                    
+                    elseif jogador.podeAtirar then
+                        local novaBala = {
+                            x = jogador.x + jogador.imagem:getWidth()/2,
+                            y = jogador.y,
+                            velocidade = 600,
+                            imagem = balaImg,
+                        }
+                        table.insert(listaDeBalas, novaBala)
+                    
+                        jogador.recargaTiro = jogador.recargaMaxima
+                    end
+                end
+            </code></pre>
+
+            <p>
+                O que acontece aqui é bem simples. Sempre que o jogador estiver com o botão de atirar pressionado e a variável <b>podeAtirar</b> for <b>true</b>, criaremos uma <i>table</i> que será o objeto da bala e usamos a função <span class="code">table.insert</span> para inserir esse objeto na <i>table</i> <b>listaDeBalas</b>. 
+                Em seguida, definimos <b>recargaTiro</b> para <b>recargaMaxima</b>, reiniciando o temporizador.
+            </p>
+
+            <p>
+                O objeto da bala que criamos possui as variáveis <b>x</b> e <b>y</b> que representam a posição dela. Definimos a posição da bala para a mesma do jogador, porém só com isso ficaria um pouco esquisito já que a posição do jogador se refere ao canto superior esquerdo dele. 
+                Para corrigir isso, só precisamos adicionar a <b>metade da largura do jogador</b> na posição <b>x</b> da bala, isso fará que ela fique centralizada horizontalmente no objeto do jogador.
+            </p>
+
+            <p>Além da posição, o objeto da bala também possui as variáveis <b>velocidade</b> que será usada para movê-la, e <b>imagem</b> que é a mesma que carregamos anteriormente. Colocamos essas variáveis no objeto apenas por conveniência, os valores serão os mesmos para todas as balas.</p>
+
+            <p>Agora vamos fazer a bala se mover. O movimento das balas consiste em apenas se moverem sempre para cima, então só precisamos passar por cada uma das balas e diminuir a posição <b>y</b> delas. Ainda no <span class="code">love.update</span>, coloque:</p>
+
+            <pre><code class="language-lua">
+                for i, bala in ipairs(listaDeBalas) do
+                    bala.y = bala.y - bala.velocidade * dt
+
+                    if bala.y &lt; 0 then
+                        table.remove(listaDeBalas, i)
+                    end
+                end
+            </code></pre>
+
+            <p>
+                Aqui nós usamos um <i>for loop</i> em conjunto com o iterador <span class="code">ipairs</span>. Esse iterador recebe uma <i>table</i> e então executa o código do loop para cada elemento dela. A cada vez que o loop é executado, o <span class="code">ipairs</span> retorna o índice onde o elemento está localizado na <i>table</i> 
+                e o elemento em si, nós guardamos esses 2 valores nas variáveis <b>i</b> e <b>bala</b>, respectivamente.
+            </p>
+
+            <p>
+                Para cada bala na lista, nós subtraímos a velocidade * dt da posição <b>y</b> dela, o que fará que ela vá para cima. Após isso, nós verificamos se a bala está fora da tela e então a removemos para que ela não fique vagando infinitamente.
+                Usamos função <span class="code">table.remove</span> para remover a bala da lista, no primeiro argumento nós passamos uma <i>table</i> e no segundo argumento nós passamos o índice do elemento que iremos remover.
+            </p>
+
+            <p>Agora precisamos desenhar cada uma das balas. Dentro do <span class="code">love.draw</span>, coloque:</p>
+
+            <pre><code class="language-lua">
+                for i, bala in ipairs(listaDeBalas) do
+                    love.graphics.draw(bala.imagem, bala.x, bala.y)
+                end
+            </code></pre>
+
+            <p>Aqui nós também usamos o <span class="code">ipairs</span> para passar por cada bala e então desenhamos a imagem da bala na posição dela, da mesma forma que fizemos com o jogador.</p>
+
+            <p>Agora podemos executar o jogo para finalmente poder fuzilar com nossa nave incrível</p>
+            <img src="atirando.gif" alt="Atirando">
+
+            <p>Isso é tudo para a parte 2, já tivemos um bom progresso até aqui. Na parte 3 nós criaremos os inimigos e também aprenderemos a detectar colisões.</p>
+            
+            <a class="goto-part left" href=".">Ir para a parte 1</a>
+            <a class="goto-part right" href="part3.html">Ir para a parte 3</a>
+
+            <div id="comment-section"></div>
+        </article>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/components/prism-core.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/plugins/autoloader/prism-autoloader.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/plugins/normalize-whitespace/prism-normalize-whitespace.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/plugins/line-highlight/prism-line-highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+
+
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script> -->
+        <script src="/node_modules/jquery/dist/jquery.js"></script>
+        <script src="/script.js"></script>
+    </body>
+
+    <footer>
+        <div id="pagefooter"></div>
+    </footer>
+</html>
