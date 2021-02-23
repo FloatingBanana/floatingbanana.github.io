@@ -1,8 +1,16 @@
-#tutorial-list {
+#tutorial-box {
     border: 1px solid gray;
+    background-color: rgb(221, 221, 221);
     border-radius: 10px;
     margin: 5% 10px;
-    background-color: rgb(221, 221, 221);
+}
+
+#tutorial-box .head {
+    background-color:rgb(196, 196, 196);
+    min-height: 60px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    margin-bottom: 10px;
 }
 
 #tutorial-list::after {

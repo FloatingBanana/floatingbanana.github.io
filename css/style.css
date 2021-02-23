@@ -4,6 +4,7 @@
 
 body {
     background: whitesmoke;
+    margin: 0;
 }
 
 h1, h2, h3 {
@@ -41,6 +42,7 @@ article .goto-part:hover {
     background-color: gray;
 }
 
+
 article .goto-part.left {
     float: left;
 }
@@ -49,6 +51,8 @@ article .goto-part.right {
     float: right;
 }
 
+
+/* Inline code */
 .code {
     font-family: monospace, "Open Sans", sans-serif;
     background-color: rgb(211, 211, 211);
@@ -62,21 +66,6 @@ article .goto-part.right {
     background-color: rgb(200, 200, 200);
     border: 1px solid rgb(200, 200, 200);
 }
-
-@media screen and (max-width: 675px) {
-    article {
-        margin: 0px 5%;
-    }
-
-    article p, article a {
-        font-size: small;
-    }
-
-    h1, h2, h3 {
-        font-size: large;
-    }
-}
-
 
 .collapsible {
     background-color: rgb(180, 180, 180);
@@ -118,4 +107,18 @@ article .goto-part.right {
 pre {
     border: 2px solid rgb(202, 202, 202);
     border-radius: 4px;
+}
+
+@media screen and (max-width: 675px) {
+    article {
+        margin: 0px 5%;
+    }
+
+    article p, article a {
+        font-size: small;
+    }
+
+    h1, h2, h3 {
+        font-size: large;
+    }
 }
