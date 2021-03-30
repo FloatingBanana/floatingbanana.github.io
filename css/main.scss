@@ -1,3 +1,5 @@
+@import '_layout.scss';
+
 * {
     font-family: "Open Sans", sans-serif;
 }
@@ -16,39 +18,54 @@ h1, h2, h3 {
 article {
     margin: 0px 20%;
     text-align: center;
-}
 
-article p {
-    text-align: left;
-    font-size: medium;
-}
+    p {
+        text-align: left;
+        font-size: medium;
+    }
 
-article img {
-    width: 100%;
-}
+    img {
+        width: 100%;
+    }
 
-article .goto-part {
-    font-weight: bold;
-    text-decoration: none;
-    color: blue;
-    padding: 5px;
-    border: 1px solid whitesmoke;
-    border-radius: 4px;
-}
+    .info {
+        border-radius: 8px;
+        border: 2px dashed whitesmoke * 0.85;
+        padding: 5px 15px;
+        background-color: whitesmoke * 0.95;
+    }
 
-article .goto-part:hover {
-    color: white;
-    border-color: gray;
-    background-color: gray;
-}
+    .goto-part {
+        position: relative;
+        width: 100%;
+        height: 50px;
 
+        a {
+            font-weight: bold;
+            text-decoration: none;
+            color: blue;
+            padding: 5px;
+            border: 1px solid whitesmoke;
+            border-radius: 4px;
+        }
 
-article .goto-part.left {
-    float: left;
-}
+        a:hover {
+            color: white;
+            border-color: gray;
+            background-color: gray;
+        }
 
-article .goto-part.right {
-    float: right;
+        .left {
+            position: absolute;
+            left: 0;
+        }
+
+        .right {
+            position: absolute;
+            right: 0;
+        }
+    }
+
 }
 
 
@@ -67,6 +84,9 @@ article .goto-part.right {
     border: 1px solid rgb(200, 200, 200);
 }
 
+
+
+/* Collapsible block */
 .collapsible {
     background-color: rgb(180, 180, 180);
     cursor: pointer;
@@ -78,13 +98,13 @@ article .goto-part.right {
     text-align: left;
 }
 
-.collapsible-active {
-    border-radius: 4px 4px 0px 0px;
-}
-
 .collapsible:hover {
     background-color: #ccc;
     border-color: #ccc;
+}
+
+.collapsible-active {
+    border-radius: 4px 4px 0px 0px;
 }
 
 .collapsible-content {
@@ -96,29 +116,23 @@ article .goto-part.right {
     border-radius: 0 0 4px 4px;
 }
 
-.collapsible::before {
-    content: "\25b6 ";
-}
-
-.collapsible-active::before {
-    content: "\25bc ";
-}
-
 pre {
     border: 2px solid rgb(202, 202, 202);
     border-radius: 4px;
 }
 
+
 @media screen and (max-width: 675px) {
     article {
         margin: 0px 5%;
-    }
-
-    article p, article a {
-        font-size: small;
+        
+        p, a {
+            font-size: small;
+        }
     }
 
     h1, h2, h3 {
         font-size: large;
     }
 }
+

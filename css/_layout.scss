@@ -1,0 +1,88 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
+
+#header #banner {
+    max-width: 100%;
+    display: flex;
+}
+
+.navbar {
+    text-align: center;
+    background-color: rgb(216, 216, 216);
+
+    a {
+        color: black;
+        padding: 16px;
+        text-decoration: none;
+        display: inline;
+        transition: linear .1s;
+    }
+
+    .dropbtn {
+        background-color: rgb(216, 216, 216);
+        color: black;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+        outline: none;
+        transition: linear .1s;
+    }
+
+    .dropbtn::after {
+        content: " \25bc";
+    }
+
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .drop-content {
+        display: none;
+        position: absolute;
+        background-color: rgb(216, 216, 216);
+        width: 117px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+    }
+
+    .drop-content {
+        a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        a:hover {
+            background-color: rgb(201, 201, 201);
+        }
+    }
+    
+    .dropdown:hover .drop-content {
+        display: block;
+    }
+
+    a:hover, .dropdown:hover .dropbtn {
+        background-color: rgb(201, 201, 201);
+    }
+}
+
+/* Footer */
+footer {
+    background-color: rgb(196, 196, 196);
+    margin: 0;
+    padding: 20px 0 5px 0;
+    text-align: center;
+
+    .icons a {
+        color: white;
+        font-size: 30px;
+        text-decoration: none;
+    }
+
+    .copyright {
+        margin-top: 30px;
+        color: white;
+    }
+}
+

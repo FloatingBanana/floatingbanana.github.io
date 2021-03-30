@@ -1,22 +1,30 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="pt-br">
     <head>
         <title>Seu primeiro jogo em 200 linhas - Parte 1</title>
 
-        <link rel="stylesheet" href="/css/style.css">
-        <link rel="stylesheet" href="/css/header.css">
+        <meta charset="UTF-8">
+        <meta name="author" content="FloatingBanana">
+        <meta name="description" content="Aprenda o básico do LÖVE fazendo um pequeno jogo.">
+        <meta name="keywords" content="gamedev, love2d, lua, tutorial, primeiro jogo">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+        <!-- css -->
         <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap">
+        <link rel="stylesheet" href="/css/main.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/plugins/line-highlight/prism-line-highlight.min.css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/plugins/line-numbers/prism-line-numbers.min.css"/>
+
+        <!-- js -->
+        <script src="https://kit.fontawesome.com/d1e894d9b9.js" crossorigin="anonymous"></script>
     </head>
 
     <body>
         <div id="header"></div>
 
-        <article>
+        <article class="line-numbers">
             <h1>Seu primeiro jogo em 200 linhas - Parte 1</h1>
 
             <p>Então você está interessado em programar usando o LÖVE mas não sabe onde começar? Não se preocupe, este tutorial
@@ -38,13 +46,11 @@
             <!-- ANCHOR Preparando o ambiente -->
             <h2>Passo 1: Preparando o ambiente</h2>
 
-            <p>
-                Vá até a <a href="https://love2d.org/" target="_blank">página inicial do LÖVE</a> e baixe a versão correspondente ao seu sistema operacional. Neste tutorial eu vou usar a versão do Windows 64-bits zipped,
-                você pode conseguir mais informações de como executar o LÖVE <a href="https://love2d.org/wiki/Getting_Started" target="_blank">aqui</a> caso esteja usando outro sistema operacional.
-            </p>
-            <p>
-                Crie uma pasta chamada &quot;love2d&quot; em qualquer lugar e extraia todos os arquivos do LÖVE nela. Depois crie uma pasta dentro dela chamada &quot;Meu jogo&quot;, você vai colocar todos os arquivos do seu jogo nela.
-            </p>
+            <p>Vá até a <a href="https://love2d.org/" target="_blank">página inicial do LÖVE</a> e baixe a versão correspondente ao seu sistema operacional. Neste tutorial eu vou usar a versão do Windows 64-bits zipped.</p>
+
+            <p>Crie uma pasta chamada &quot;love2d&quot; em qualquer lugar e extraia todos os arquivos do LÖVE nela. Depois crie uma pasta dentro dela chamada &quot;Meu jogo&quot;, você vai colocar todos os arquivos do seu jogo nela.</p>
+
+            <p>Caso esteja no Android, você precisa instalar o apk do LÖVE. Após isso, crie uma pasta chamada exatamente <b>"lovegame"</b> no armazenamento interno do seu dispositivo, os arquivos do seu jogo vão ficar nela.</p>
             <p>
                 Em seguida você vai precisar de um editor de código. Eu uso o
                 <a href="https://code.visualstudio.com/" target="_blank">Visual Studio Code</a>, porém há boas alternativas como o 
@@ -57,23 +63,25 @@
             <!-- ANCHOR Configurando o jogo -->
             <h2>Passo 2: Configurando o jogo</h2>
 
-            <p>
-                Abra a pasta &quot;Meu Jogo&quot; e crie um arquivo chamado &quot;conf.lua&quot;, depois abra esse arquivo e coloque:
-            </p>
+            <p>Abra a pasta &quot;Meu Jogo&quot; e crie um arquivo chamado &quot;conf.lua&quot;, depois abra esse arquivo e coloque:</p>
 
             <pre><code class="language-lua">
                 function love.conf(t)
                     t.title = "Meu joguinho bacana"
                     t.window.width = 500
                     t.window.height = 650
-                    t.window.usedpiscale = false --Caso esteja no Android
+                    t.window.usedpiscale = false
                 end
             </code></pre>
 
-            <p>
-                Esse arquivo serve para configurar a janela do jogo e outros recursos, ele não é obrigatório para a execução do LÖVE mas nesse tutorial nós vamos precisar dele. No código acima nós definimos o título da janela para &quot;Meu joguinho bacana&quot;
-                e também definimos a resolução da janela para 500x650. A última opção evita um comportamento bem chato no Android, nos outros sistemas operacionais essa opção não faz nada. <a href="https://love2d.org/wiki/Config_Files" target="_blank">Aqui</a> estão todas opções que você pode modificar junto com os valores padrões.
-            </p>
+            <p>Esse arquivo serve para configurar a janela do jogo e outros recursos, ele não é obrigatório para a execução do LÖVE mas nesse tutorial nós vamos precisar dele. As opções que nós definimos são:</p>
+            
+            <div class="info">
+                <p><span class="code">t.title</span>: O título da janela do jogo. Definimos ele para "Meu joguinho bacana".</p>
+                <p><span class="code">t.window.width</span> e <span class="code">t.window.height</span>: a largura e altura da janela, respectivamente. definimos a largura para 500 e a altura pra 650. Note que essa opção é ignorada no Android, a janela sempre terá o mesmo tamanho da tela do seu dispositivo</p>
+                <p><span class="code">t.window.usedpiscale</span>: Essa opção ativa/desativa o dimensionamento de DPI nos dispositivos suportados. Não vou entrar em detalhes, mas isso causa um zoom esquisito em alguns dispositivos Android, então desative essa opção.</p>
+            </div>
+
             <p>
                 Crie um outro arquivo chamado &quot;main.lua&quot;. Esse é o arquivo principal e é a partir dele que o LÖVE irá executar o seu jogo, lembre-se que ele <b>precisa estar na raíz do diretório do seu jogo</b>.
                 Dentro desse arquivo, coloque:
@@ -94,21 +102,24 @@
             </code></pre>
 
             <p>Aqui nós definimos 3 funções importantes:</p>
-            <p>
-                <span class="code">love.load()</span>: É executada apenas 1 vez no início do programa depois que o LÖVE for inicializado. É aqui onde você vai carregar arquivos externos como imagens, áudios, etc.
-                Não é obrigatório usar essa função, você pode muito bem carregar o que você precisa diretamente no corpo do arquivo, mas é uma boa prática fazer isso dentro do <i>love.load</i>.
-            </p>
 
-            <p><span class="code">love.draw()</span>: É executado a cada frame. É onde você vai desenhar imagens, textos ou qualquer outra coisa gráfica na tela.</p>
-
-            <p>
-                <span class="code">love.update(dt)</span>: Também é executado a cada frame e é onde você vai colocar a lógica do seu jogo.
-                <br>O argumento dt (<i>delta time</i>) é o tempo passado desde a última vez que essa função foi chamada. Nós usaremos esse número em todas as operações que são atualizadas constantemente (como temporizadores, movimentação do jogador, etc)
-                para garantir que o jogo mantenha a mesma velocidade independente de quantos FPS ele está rodando. <a href="https://www.fabricadejogos.net/posts/tutorial-entendo-o-que-o-deltatime/" target="_blank">Aqui</a> tem uma pequena explicação sobre a importância do <i>delta time</i>, é sobre o Unity mas se aplica aqui também.
-            </p>
+            <div class="info">
+                <p>
+                    <span class="code">love.load()</span>: É executada apenas 1 vez no início do programa depois que o LÖVE for inicializado. É aqui onde você vai carregar arquivos externos como imagens, áudios, etc.
+                    Não é obrigatório usar essa função, você pode muito bem carregar o que você precisa diretamente no corpo do arquivo, mas é uma boa prática fazer isso dentro do <span class="code">love.load</span>.
+                </p>
+                
+                <p><span class="code">love.draw()</span>: É executado a cada frame. É onde você vai desenhar imagens, textos ou qualquer outra coisa gráfica na tela.</p>
+                
+                <p>
+                    <span class="code">love.update(dt)</span>: Também é executado a cada frame e é onde você vai colocar a lógica do seu jogo.
+                    <br>O argumento <span class="code">dt</span> (<i>Delta Time</i>) é o tempo passado desde a última vez que essa função foi chamada. Nós usaremos esse número em todas as operações que são atualizadas constantemente (como temporizadores, movimentação do jogador, etc)
+                    para garantir que o jogo mantenha a mesma velocidade independente de quantos FPS ele está rodando.
+                </p>
+            </div>
 
             <p>Essas 3 funções são <b>callbacks</b>, nós definimos o que elas fazem e o LÖVE irá chamá-las automaticamente.</p>
-            <br>
+
             <p>Feito isso, você já deve conseguir executar o seu jogo. Vá até a pasta &quot;love2d&quot; e arraste a pasta &quot;Meu jogo&quot; em cima do executável &quot;love.exe&quot;.</p>
 
             <img src="primeira_execucao.png" alt="primeira execução do jogo">
@@ -165,9 +176,11 @@
 
             <p>E com isso nós terminamos a primeira parte do nosso tutorial. Na parte 2 é onde nós vamos realmente botar a mão na massa e fazer a movimentação do jogador.</p>
             
-            <a class="goto-part right" href="part2.html">Ir para a parte 2</a>
+            <div class="goto-part">
+                <a class="right" href="part2.html">Ir para a parte 2</a>
+            </div>
 
-            <div id="comment-section"></div>
+            <div id="disqus_thread"></div>
         </article>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/components/prism-core.min.js"></script>
@@ -176,9 +189,9 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/plugins/line-highlight/prism-line-highlight.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 
-        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script> -->
         <script src="/node_modules/jquery/dist/jquery.js"></script>
         <script src="/js/script.js"></script>
-
     </body>
+
+    <footer></footer>
 </html>

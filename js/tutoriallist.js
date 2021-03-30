@@ -18,19 +18,25 @@ var beginner = [
 function createItemElements(items) {
     let elementString = items.map(item => {
         return `
-        <div class="item-border">
-            <div class="item-back">
-                <img src="icons/ ${item.link} .png" width="150" height="115">
-                <span class="title"> ${item.title} </span> <br>
-                <span class="description"> ${item.description} </span>
-                <a class="start" href=" ${item.link} ">Iniciar</a>
-            </div>
-        </div>
-        `
+            <div class="item-border">
+                <div class="item-back">
+                    <div class="thumb-container">
+                        <div class="aspect-resizer">
+                            <img src="${item.link}/thumb.png">
+                        </div>
+                    </div>
 
+                    <span class="title"> ${item.title} </span> <br>
+                    <span class="description"> ${item.description} </span>
+                    <a class="start" href=" ${item.link} ">Iniciar</a>
+                </div>
+            </div>
+        `
     })
 
     return $.parseHTML(elementString.join("\n"))
 }
 
-$("#tutorial-list").append(createItemElements(beginner))
+$(function() {
+    $("#tutorial-list").append(createItemElements(beginner))
+})

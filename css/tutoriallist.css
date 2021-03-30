@@ -22,7 +22,7 @@
 
 #tutorial-list .item-border {
     width: 50%;
-    height: 150px;
+    height: 180px;
     float: left;
     box-sizing: border-box;
     padding: 5px;
@@ -43,21 +43,39 @@
     transition: .2s linear;
 
     position: relative;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 #tutorial-list .item-back:hover {
     box-shadow: 1px 2px 3px 2px gray;
 }
 
-#tutorial-list .item-back img {
-    /* width: 20%; */
-    /* height: 100%; */
-    box-sizing: border-box;
-    border: 2px solid gray;
-    border-radius: 5px;
+#tutorial-list .thumb-container {
+    width: 25%;
     margin-right: 10px;
     float: left;
+}
+
+#tutorial-list .aspect-resizer {
+    /* background-color: red; */
+    width: 100%;
+    padding-top: 76.66%;
+    position: relative;
+    box-sizing: border-box;
+}
+
+#tutorial-list .thumb-container img {
+    /* width: 150px; */
+    /* height: 115px; */
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+
+    border-radius: 5px;
 }
 
 #tutorial-list .item-back .title {

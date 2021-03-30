@@ -1,16 +1,25 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="pr-br">
     <head>
         <title>Seu primeiro jogo em 200 linhas - Parte 2</title>
 
-        <link rel="stylesheet" href="/css/style.css">
-        <link rel="stylesheet" href="/css/header.css">
+
+        <meta charset="UTF-8">
+        <meta name="author" content="FloatingBanana">
+        <meta name="description" content="Aprenda o básico do LÖVE fazendo um pequeno jogo.">
+        <meta name="keywords" content="gamedev, love2d, lua, tutorial, primeiro jogo">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+        <!-- css -->
         <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap">
+        <link rel="stylesheet" href="/css/main.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/plugins/line-highlight/prism-line-highlight.min.css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/plugins/line-numbers/prism-line-numbers.min.css"/>
+
+        <!-- js -->
+        <script src="https://kit.fontawesome.com/d1e894d9b9.js" crossorigin="anonymous"></script>
     </head>
 
     <body>
@@ -60,7 +69,7 @@
 
             <p>Agora nós iremos começar a usar mais o <span class="code">love.update</span>. Coloque isso dentro dele:</p>
 
-            <pre><code class="language-lua">
+            <pre data-line="2-7"><code class="language-lua">
                 function love.update(dt)
                     if love.keyboard.isDown(&quot;left&quot;) then
                         jogador.x = jogador.x - jogador.velocidade * dt
@@ -72,13 +81,13 @@
             </code></pre>
 
             <p>
-                Em cada frame nós verificamos se a tecla &quot;left&quot; (direcional esquerdo) está pressionada. Caso esteja, nós pegamos o valor da variável <b>velocidade</b> do jogador, multiplicamos por <b>dt</b> e então <u>subtraímos</u> esse valor da posição X do jogador.
+                Em cada frame nós verificamos se a tecla &quot;left&quot; (direcional esquerdo) está pressionada. Caso esteja, nós pegamos a <b>velocidade</b> do jogador, multiplicamos por <b>dt</b> e então <u>subtraímos</u> esse valor da posição X do jogador.
                 Depois fazemos a mesma coisa com a tecla &quot;right&quot; (direcional direito), porém nós <u>adicionamos</u> o valor à posição X do jogador.
             </p>
 
             <p>Caso esteja no Android, será necessário um pequeno truque para fazer os controles no touch. O que nós vamos fazer é dividir a tela horizontalmente em 3 partes: esquerda, centro e direita. Depois nós verificamos se o lado esquerdo ou direito da tela está sendo pressionado e então movemos o jogador para essa direção:</p>
             
-            <pre><code class="language-lua">
+            <pre data-line="2-11"><code class="language-lua">
                 function love.update(dt)
                     local area = love.graphics.getWidth()/3
 
@@ -99,7 +108,7 @@
                 Caso esteja, nós usamos a função <span class="code">love.mouse.getX</span> para obter a posição X do touch e verificamos se é menor que <b>area</b> (ou seja, o lado esquerdo da tela) e então diminuímos a velocidade * dt da posição do jogador. Em seguida, da mesma forma, verificamos se a posição X do touch é maior que a largura da tela - <b>area</b> (ou seja, o lado direito da tela) e então adicionamos a velocidade * dt na posição do jogador.
             </p>
 
-            <button class="collapsible">Mas por que precisamos multiplicar a velocidade por <b>dt</b>?</button>
+            <button class="collapsible">  Mas por que precisamos multiplicar a velocidade por <b>dt</b>?</button>
             <div class="collapsible-content">
                 <p>Primeiro você precisa saber que o <span class="code">love.update</span> é executado de acordo com o FPS (frames por segundo), então se o jogo estiver rodando a 20 FPS, tudo dentro do <span class="code">love.update</span> será executado 20 vezes a cada segundo, se estiver rodando a 5 FPS então tudo será executado 5 vezes a cada segundo e por aí vai.</p>
 
@@ -143,10 +152,11 @@
 
             <p>Aqui nós usamos duas funções bem úteis que vem embutidas na linguagem: </p>
             
-            <p>
-                <span class="code">math.max</span>: Recebe 2 números como argumento e retorna o <b>maior</b> deles. <br>
-                <span class="code">math.min</span>: Recebe 2 números como argumento e retorna o <b>menor</b> deles.
-            </p>
+
+            <div class="info">
+                <p><span class="code">math.max</span>: Recebe 2 números como argumento e retorna o <b>maior</b> deles.</p>
+                <p><span class="code">math.min</span>: Recebe 2 números como argumento e retorna o <b>menor</b> deles.</p>
+            </div>
 
             <p>Na primeira linha nós usamos o <span class="code">math.max</span> para definir a posição X do jogador para 0 se ela for menor que 0, isso deve impedir que o jogador saia da tela pelo lado esquerdo.</p>
             <p>Na segunda linha nós pegamos a largura da tela e subtraímos pela largura da imagem do jogador (obtida através da função <span class="code">getWidth</span> do objeto Image), esse é o limite do lado direito considerando a largura do jogador. Depois usamos o <span class="code">math.min</span> para definir a posição X do jogador para esse valor limite se ele for maior que esse valor, isso deve impedir que o jogador saia pelo lado direito.</p>
@@ -158,7 +168,7 @@
 
             <p>Para fazer o jogador atirar será necessário criar um objeto diferente para cada bala, depois passar por cada uma delas e movê-las, desenhá-las e destruí-las quando for necessário. A imagem que eu vou usar para as balas é a <i>bullet_2_blue.png</i>, que está no mesmo pack de sprites que pegamos a imagem do jogador. Coloque ela na pasta &quot;imagens&quot; e renomeie para &quot;bala.png&quot;.</p>
             <p>Nós vamos criar uma <i>table</i> para agrupar as balas que serão criadas e uma variável para carregar a imagem delas:</p>
-            <pre><code class="language-lua">
+            <pre data-line="1-2, 6"><code class="language-lua">
                 balaImg = nil
                 listaDeBalas = {}
 
@@ -170,7 +180,7 @@
             
             <p>Também vamos criar algumas variáveis no objeto do jogador. Nós vamos usá-las para fazer um temporizador que irá limitar a frequência de tiros, afinal, seria muito injusto conseguir atirar dezenas de balas por segundo, certo?</p>
             
-            <pre><code class="language-lua">
+            <pre data-line="7-9"><code class="language-lua">
                 jogador = {
                     x = 100,
                     y = 550,
@@ -198,7 +208,7 @@
                 end
             </code></pre>
 
-            <p>Aqui nós fizemos um pequeno temporizador que subtrai 1 da variável <b>recargaTiro</b> do jogador por segundo. Depois definimos a variável <b>podeAtirar</b> do jogador para true se <b>recargaTiro</b> for menor ou igual a 0, ou para false caso não seja.</p>
+            <p>Aqui nós fizemos um pequeno temporizador que subtrai 1 da variável <b>recargaTiro</b> do jogador por segundo. Depois definimos a variável <b>podeAtirar</b> do jogador para true se o temporizador <b>recargaTiro</b> estiver esgotado, ou para false caso não esteja.</p>
             <p>Agora vamos fazer o gatilho do tiro. No teclado será o botão &quot;z&quot; que irá disparar:</p>
 
             <pre><code class="language-lua">
@@ -215,9 +225,9 @@
                 end
             </code></pre>
 
-            <p>Já no Android será a área do centro da tela que irá disparar. Como já temos um if e um elseif verificando se o touch está no lado esquerdo ou direito, então só precisamos adicionar um outro elseif que ele assumirá que o touch está na área do centro da tela:</p>
+            <p>Já no Android será a área do centro da tela que irá disparar. Como já temos um <span class="code">if</span> e um <span class="code">elseif</span> verificando se o touch está no lado esquerdo ou direito, então só precisamos adicionar um outro elseif que ele assumirá que o touch está na área do centro da tela:</p>
             
-            <pre><code class="language-lua">
+            <pre data-line="10-20"><code class="language-lua">
                 local area = love.graphics.getWidth()/3
 
                 if love.mouse.isDown(1) then
@@ -290,10 +300,12 @@
 
             <p>Isso é tudo para a parte 2, já tivemos um bom progresso até aqui. Na parte 3 nós criaremos os inimigos e também aprenderemos a detectar colisões.</p>
             
-            <a class="goto-part left" href=".">Ir para a parte 1</a>
-            <a class="goto-part right" href="part3.html">Ir para a parte 3</a>
+            <div class="goto-part">
+                <a class="left" href=".">Ir para a parte 1</a>
+                <a class="right" href="part3.html">Ir para a parte 3</a>
+            </div>
 
-            <div id="comment-section"></div>
+            <div id="disqus_thread"></div>
         </article>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/components/prism-core.min.js"></script>
@@ -308,7 +320,5 @@
         <script src="/js/script.js"></script>
     </body>
 
-    <footer>
-        <div id="pagefooter"></div>
-    </footer>
+    <footer></footer>
 </html>
