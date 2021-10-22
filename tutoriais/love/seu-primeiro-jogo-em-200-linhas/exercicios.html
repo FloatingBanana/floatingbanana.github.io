@@ -95,6 +95,9 @@
 
                         -- Criando uma variável com a vida do jogador
                         vida = 50,
+
+                        -- Definindo a vida máxima do jogador
+                        vidaMaxima = 50,
                     }
                 </code></pre>
 
@@ -112,10 +115,24 @@
                         end
                     end
                 </code></pre>
+
+                <p>No final do <span class="code">love.draw</span>:</p>
+                <pre><code class="language-lua">
+                    -- Multiplicamos o valor da vida por 2 para deixar a barra de vida um pouco maior
+                    love.graphics.rectangle("fill", 0, 620, jogador.vida * 2, 25)
+                </code></pre>
+
+                <p>E ao reiniciar o jogo:</p>
+                <pre><code class="language-lua">
+                    jogador.vida = jogador.vidaMaxima
+                </code></pre>
             </div>
 
+            <hr>
+
             <p>E isso é tudo por enquanto. Se você concluiu os exercícios, meus parabéns! Recomendo que você siga em frente e adicione mais funcionalidades para deixar seu jogo ainda mais incrível.</p>
-            <p>Caso tenha gostado desse tutorial, compartilhe com seus amigos e familiares, eu ficaria muito grato por isso. Caso tenha alguma crítica ou sugestão, deixe nos comentários</p>
+            <p>Caso tenha gostado desse tutorial, compartilhe com seus amigos e familiares, eu ficaria muito grato por isso. Caso tenha alguma crítica ou sugestão, deixe nos comentários.</p>
+            
             <div class="goto-part">
                 <a class="left" href="part3.html">Ir para a parte 3</a>
             </div>

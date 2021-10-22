@@ -1,26 +1,56 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono&display=swap');
+
+$bg-color: rgb(126, 237, 252);
+$bg-color2: #00B1F6;
+
+$font-color: white;
+$hyperlink-color: yellow;
+$main-font: "Space Mono", monospace;
+$secondary-font: "OCR A", sans-serif;
+
+$mobile-screen: screen and (max-width: 675px);
+
 @import '_layout.scss';
 
 * {
-    font-family: "Open Sans", sans-serif;
+    font-family: $main-font;
 }
 
 body {
-    background: whitesmoke;
+    background: $bg-color;
     margin: 0;
+}
+
+#page-content {
+    max-width: 900px;
+    margin: auto;
+}
+
+.wave-animation {
+    width: 100%;
+    height: 18px;
+    margin: 0px;
+    padding: 0px;
+}
+
+.wave-animation[flipped] {
+    transform: scaleY(-1);
 }
 
 h1, h2, h3 {
     font-weight: bold;
-    text-decoration: underline;
+    color: $font-color;
     text-align: center;
 }
 
-article {
+
+
+article, .text {
     margin: 0px 20%;
     text-align: center;
 
     p {
-        text-align: left;
         font-size: medium;
     }
 
@@ -28,11 +58,19 @@ article {
         width: 100%;
     }
 
+    hr {
+        width: 100%;
+        height: 0px;
+        border: 2px solid rgb(180, 180, 180);
+        border-radius: 2px;
+        margin: 30px auto;
+    }
+
     .info {
         border-radius: 8px;
-        border: 2px dashed whitesmoke * 0.85;
+        border: 2px dashed $bg-color * 0.85;
         padding: 5px 15px;
-        background-color: whitesmoke * 0.95;
+        background-color: $bg-color * 0.95;
     }
 
     .goto-part {
@@ -45,14 +83,13 @@ article {
             text-decoration: none;
             color: blue;
             padding: 5px;
-            border: 1px solid whitesmoke;
             border-radius: 4px;
+            transition: all 0.1s linear;
         }
 
         a:hover {
             color: white;
-            border-color: gray;
-            background-color: gray;
+            background-color: rgb(56, 56, 255);
         }
 
         .left {
@@ -64,8 +101,22 @@ article {
             position: absolute;
             right: 0;
         }
+
+        .center {
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%, 0);
+        }
     }
 
+}
+
+article p {
+    text-align: left;
+}
+
+.text p {
+    text-align: center;
 }
 
 
@@ -108,11 +159,10 @@ article {
 }
 
 .collapsible-content {
+    display: none;
     padding: 15px;
     overflow: hidden;
-    display: none;
-    background-color: rgb(218, 218, 218);
-    border: 1px solid rgb(218, 218, 218);
+    background-color: $bg-color * 0.89;
     border-radius: 0 0 4px 4px;
 }
 
@@ -121,8 +171,70 @@ pre {
     border-radius: 4px;
 }
 
+.infocard {
+    background-color: $bg-color2;
+    margin: 1em;
+    border-radius: 8px;
 
-@media screen and (max-width: 675px) {
+    .infocard-text {
+        width: 80%;
+        margin: auto;
+        overflow: auto;
+        
+        h1, p {
+            color: $font-color;
+            width: 100%;
+            text-align: center;
+
+            a {
+                color: $hyperlink-color;
+            }
+        }
+    }
+    
+    .infocard-grid {
+        display: grid;
+        padding: 1em;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1em;
+        align-items: center;
+
+        a {
+            position: relative;
+            width: 100%;
+            transition: transform linear 0.1s;
+            
+            img {
+                color: white;
+                width: 100%;
+                border-radius: 4px;
+            }
+
+            span {
+                position: absolute;
+                left: 10px;
+                bottom: 10px;
+                color: #00000000;
+                transition: color linear 0.2s;
+            }
+        }
+        
+        a:hover {
+            // transform: scale(1.05, 1.05);
+
+            img {
+                filter: blur(1px);
+            }
+            
+            span {
+                color: white;
+            }
+        }
+
+    }
+}
+
+@media #{$mobile-screen} {
     article {
         margin: 0px 5%;
         
@@ -133,6 +245,10 @@ pre {
 
     h1, h2, h3 {
         font-size: large;
+    }
+
+    .infocard .infocard-grid {
+        grid-template-columns: 1fr 1fr;
     }
 }
 

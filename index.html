@@ -2,12 +2,12 @@
 
 <html lang="pt-br">
     <head>
-        <title>Página inicial | FloatingBanana</title>
+        <title>Início | FloatingBanana</title>
 
         <meta charset="UTF-8">
         <meta name="author" content="FloatingBanana">
         <meta name="description" content="Venha conhecer jogos, tutoriais e projetos feitos por FloatingBanana.">
-        <meta name="keywords" content="gamedev, games, jogos">
+        <meta name="keywords" content="gamedev, games, jogos, programação">
         <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
         <!-- css -->
@@ -21,17 +21,65 @@
     <body>
         <div id="header"></div>
 
-        <div style="text-align: center;">
-            <h3 style="text-decoration: underline;">Em desenvolvimento</h3>
-            <p>Ainda não tem nada aqui, mas você pode acessar estas links por enquanto:</p>
-            
-            <ul style="display: inline-block; text-align: left;">
-                <li><a href="/tutoriais/love/">Tutoriais LÖVE</a></li>
-                <li><a href="#">Tutoriais Lua</a></li>
-            </ul>
+        <div id="page-content">
+            <div class="infocard">
+                <div class="infocard-text">
+                    <h1>Meus jogos</h1>
+                    <p>Conheça alguns dos jogos que eu já criei. Eles estão disponíveis na <a href="https://gamejolt.com/@FloatingBanana" target="_blank">GameJolt</a> e <a href="https://floatingbanana.itch.io" target="_blank">itch.io</a>.</p>
+                </div>
+    
+                <div class="infocard-grid">
+                    <a href="https://floatingbanana.itch.io/the-revenge-cycle" target="_blank">
+                        <img src="gamecard_thumbs/the_revenge_cycle.png">
+                        <span class="name">The Revenge Cycle</span>
+                    </a>
+
+                    <a href="https://gamejolt.com/games/grappling-around/572751" target="_blank">
+                        <img src="gamecard_thumbs/grappling_around.png">
+                        <span class="name">Grappling Around</span>
+                    </a>
+    
+                    <a href="https://gamejolt.com/games/inas/445269" target="_blank">
+                        <img src="gamecard_thumbs/inas.png">
+                        <span class="name">Insane Nights at Snowball's</span>
+                    </a>
+    
+                    <a href="https://floatingbanana.itch.io/dark-rooms" target="_blank">
+                        <img src="gamecard_thumbs/dark_rooms.png">
+                        <span class="name">Dark Rooms</span>
+                    </a>
+
+                    <a href="https://floatingbanana.itch.io/counter-dungeon" target="_blank">
+                        <img src="gamecard_thumbs/counter_dungeon.png">
+                        <span class="name">Counter Dungeon</span>
+                    </a>
+                </div>
+    
+            </div>
+    
+            <div class="infocard">
+                <div class="infocard-text">
+                    <h2>Meus projetos</h2>
+                    <p></p>
+                </div>
+    
+            </div>
         </div>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<!-- 
+        <div class="gamecard-container">
+            <a class="gamecard" href="https://gamejolt.com/games/inas/445269" target="_blank">
+                <img src="gamecard_thumbs/inas.png" alt="">
+                <p class="gamecard-title">Insane Nights at Snowball's</p>
+            </a>
+
+            <a class="gamecard" href="https://gamejolt.com/games/inas/445269" target="_blank">
+                <img src="gamecard_thumbs/grappling_around.png" alt="">
+                <p class="gamecard-title">Grappling Around</p>
+            </a>
+        </div>
+         -->
+        <script src="node_modules/jquery/dist/jquery.min.js"></script>
         <script src="/js/script.js"></script>
     </body>
 
