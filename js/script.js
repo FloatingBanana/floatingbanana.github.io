@@ -42,17 +42,17 @@ function loadDisqus() {
 function initCollapsibles() {
     var collapsibleBehavior = function() {
         let icon = this.firstChild
+        let content = this.nextElementSibling
     
         this.classList.toggle("collapsible-active")
-        icon.classList.toggle("fa-chevron-right")
-        icon.classList.toggle("fa-chevron-down")
-    
-        var content = this.nextElementSibling
+
         if (content.style.display == "block") {
             content.style.display = "none"
+            icon.style.transform = "none"
         }
         else {
             content.style.display = "block"
+            icon.style.transform = "rotate(90deg)"
         }
     }
     
@@ -75,14 +75,14 @@ function animationLoop() {
         canvas.width = context.width
         canvas.height = context.height
 
-        drawWave(context, element.hasAttribute("flipped"))
+        drawWave(context)
     })
 
     step++
     requestAnimationFrame(animationLoop)
 }
 
-function drawWave(ctx, flipped) {
+function drawWave(ctx) {
     const frequency = 20
     const speed = .005
     width = ctx.width

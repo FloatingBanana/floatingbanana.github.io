@@ -23,10 +23,10 @@
         border: none;
         outline: none;
         transition: linear .1s;
-    }
-
-    .dropbtn::after {
-        content: " \25bc";
+        
+        &::after {
+            content: " \25bc";
+        }
     }
 
     .dropdown {
@@ -37,8 +37,8 @@
     .drop-content {
         display: none;
         position: absolute;
+        width: 100%;
         background-color: $bg-color2 * 1.15;
-        width: 117px;
         box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
         z-index: 1;
 

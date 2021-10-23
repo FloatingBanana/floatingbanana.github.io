@@ -11,10 +11,18 @@ $secondary-font: "OCR A", sans-serif;
 
 $mobile-screen: screen and (max-width: 675px);
 
+@function lerp($start, $end, $progress) {
+    @return $start + ($end - $start) * $progress;
+}
+
 @import '_layout.scss';
 
 * {
     font-family: $main-font;
+}
+
+a {
+    color: $hyperlink-color;
 }
 
 body {
@@ -32,10 +40,10 @@ body {
     height: 18px;
     margin: 0px;
     padding: 0px;
-}
 
-.wave-animation[flipped] {
-    transform: scaleY(-1);
+    &[flipped] {
+        transform: scaleY(-1);
+    }
 }
 
 h1, h2, h3 {
@@ -47,11 +55,14 @@ h1, h2, h3 {
 
 
 article, .text {
-    margin: 0px 20%;
+    margin: 0px auto;
+    padding: 2em;
+    max-width: 800px;
     text-align: center;
 
     p {
         font-size: medium;
+        text-align: left;
     }
 
     img {
@@ -81,16 +92,17 @@ article, .text {
         a {
             font-weight: bold;
             text-decoration: none;
-            color: blue;
+            color: $bg-color2 * 0.8;
             padding: 5px;
             border-radius: 4px;
             transition: all 0.1s linear;
+            
+            &:hover {
+                color: $font-color;
+                background-color: $bg-color2;
+            }
         }
 
-        a:hover {
-            color: white;
-            background-color: rgb(56, 56, 255);
-        }
 
         .left {
             position: absolute;
@@ -111,47 +123,32 @@ article, .text {
 
 }
 
-article p {
-    text-align: left;
-}
-
-.text p {
-    text-align: center;
-}
-
-
 /* Inline code */
 .code {
     font-family: monospace, "Open Sans", sans-serif;
-    background-color: rgb(211, 211, 211);
-    border: 1px solid rgb(211, 211, 211);
+    background-color: $bg-color2;
+    color: $font-color;
     border-radius: 4px;
     padding-left: 6px;
     padding-right: 6px;
 }
 
-.collapsible-content .code {
-    background-color: rgb(200, 200, 200);
-    border: 1px solid rgb(200, 200, 200);
-}
-
-
 
 /* Collapsible block */
 .collapsible {
-    background-color: rgb(180, 180, 180);
+    background-color: $bg-color2;
     cursor: pointer;
     padding: 15px;
     width: 100%;
-    border: 1px solid rgb(180, 180, 180);
+    border: none;
     border-radius: 4px;
     outline: none;
     text-align: left;
+    color: $font-color;
 }
 
 .collapsible:hover {
-    background-color: #ccc;
-    border-color: #ccc;
+    background-color: $bg-color2 * 0.9;
 }
 
 .collapsible-active {
@@ -165,6 +162,7 @@ article p {
     background-color: $bg-color * 0.89;
     border-radius: 0 0 4px 4px;
 }
+
 
 pre {
     border: 2px solid rgb(202, 202, 202);
@@ -185,10 +183,6 @@ pre {
             color: $font-color;
             width: 100%;
             text-align: center;
-
-            a {
-                color: $hyperlink-color;
-            }
         }
     }
     
@@ -217,34 +211,29 @@ pre {
                 color: #00000000;
                 transition: color linear 0.2s;
             }
-        }
-        
-        a:hover {
-            // transform: scale(1.05, 1.05);
-
-            img {
-                filter: blur(1px);
-            }
             
-            span {
-                color: white;
+            &:hover {
+                img {
+                    filter: blur(1px);
+                }
+                
+                span {
+                    color: white;
+                }
             }
         }
-
     }
 }
 
 @media #{$mobile-screen} {
     article {
-        margin: 0px 5%;
-        
         p, a {
             font-size: small;
         }
     }
 
     h1, h2, h3 {
-        font-size: large;
+        font-size: x-large;
     }
 
     .infocard .infocard-grid {

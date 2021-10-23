@@ -44,8 +44,8 @@
 .navbar .drop-content {
   display: none;
   position: absolute;
+  width: 100%;
   background-color: #00ccff;
-  width: 117px;
   -webkit-box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
           box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
@@ -92,6 +92,10 @@ footer .blueblock .copyright {
   font-family: "Space Mono", monospace;
 }
 
+a {
+  color: yellow;
+}
+
 body {
   background: #7eedfc;
   margin: 0;
@@ -121,12 +125,15 @@ h1, h2, h3 {
 }
 
 article, .text {
-  margin: 0px 20%;
+  margin: 0px auto;
+  padding: 2em;
+  max-width: 800px;
   text-align: center;
 }
 
 article p, .text p {
   font-size: medium;
+  text-align: left;
 }
 
 article img, .text img {
@@ -157,7 +164,7 @@ article .goto-part, .text .goto-part {
 article .goto-part a, .text .goto-part a {
   font-weight: bold;
   text-decoration: none;
-  color: blue;
+  color: #008ec5;
   padding: 5px;
   border-radius: 4px;
   -webkit-transition: all 0.1s linear;
@@ -166,7 +173,7 @@ article .goto-part a, .text .goto-part a {
 
 article .goto-part a:hover, .text .goto-part a:hover {
   color: white;
-  background-color: #3838ff;
+  background-color: #00B1F6;
 }
 
 article .goto-part .left, .text .goto-part .left {
@@ -186,44 +193,31 @@ article .goto-part .center, .text .goto-part .center {
           transform: translate(-50%, 0);
 }
 
-article p {
-  text-align: left;
-}
-
-.text p {
-  text-align: center;
-}
-
 /* Inline code */
 .code {
   font-family: monospace, "Open Sans", sans-serif;
-  background-color: lightgray;
-  border: 1px solid lightgray;
+  background-color: #00B1F6;
+  color: white;
   border-radius: 4px;
   padding-left: 6px;
   padding-right: 6px;
 }
 
-.collapsible-content .code {
-  background-color: #c8c8c8;
-  border: 1px solid #c8c8c8;
-}
-
 /* Collapsible block */
 .collapsible {
-  background-color: #b4b4b4;
+  background-color: #00B1F6;
   cursor: pointer;
   padding: 15px;
   width: 100%;
-  border: 1px solid #b4b4b4;
+  border: none;
   border-radius: 4px;
   outline: none;
   text-align: left;
+  color: white;
 }
 
 .collapsible:hover {
-  background-color: #ccc;
-  border-color: #ccc;
+  background-color: #009fdd;
 }
 
 .collapsible-active {
@@ -259,10 +253,6 @@ pre {
   color: white;
   width: 100%;
   text-align: center;
-}
-
-.infocard .infocard-text h1 a, .infocard .infocard-text p a {
-  color: yellow;
 }
 
 .infocard .infocard-grid {
@@ -311,14 +301,11 @@ pre {
 }
 
 @media (max-width: 675px) {
-  article {
-    margin: 0px 5%;
-  }
   article p, article a {
     font-size: small;
   }
   h1, h2, h3 {
-    font-size: large;
+    font-size: x-large;
   }
   .infocard .infocard-grid {
     -ms-grid-columns: 1fr 1fr;
